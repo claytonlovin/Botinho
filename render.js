@@ -1,18 +1,19 @@
-window.addEventListener('DOMContentLoaded', async () => {
+window.addEventListener('DOMContentLoaded', () => {
   const container = document.getElementById('qrcode-container');
-  const url = '';
 
-  const dataUrl = await window.botinho.generateQRCode(url);
-
-  if (dataUrl) {
+  window.botinho.onQrCode((dataUrl) => {
+    container.innerHTML = '';
     const img = document.createElement('img');
     img.src = dataUrl;
     img.alt = 'QR Code';
     img.style.width = '200px';
     img.style.height = '200px';
-    container.innerHTML = '';
     container.appendChild(img);
-  } else {
-    container.textContent = 'Erro ao gerar QR Code.';
-  }
+  });
+
+  window.botinho.onConnected(() => {
+    container.innerHTML = '<h2>WhatsApp já está conectado!</h2>';
+  });
+  // Inicia o WhatsApp
+  window.botinho.startWhatsapp();
 });

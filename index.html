@@ -2,7 +2,6 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-
     <title>Botinho ;)</title>
     <style>
       body {
@@ -13,6 +12,12 @@
         color: #333;
         width: 100%;
         margin: 0;
+        
+      }
+      ul{
+        list-style: none;
+        text-decoration: none;
+        text-align: left;
       }
       .container {
         display: flex;
@@ -20,12 +25,29 @@
         align-items: center;
         justify-content: center;
         height: 100vh;
-        background: #2cdec0;
-        background: linear-gradient(90deg,rgba(44, 222, 192, 1) 0%, rgba(87, 199, 133, 1) 50%);
+        background: #2cde7c;
+        background: linear-gradient(90deg,rgba(44, 222, 192, 1) 0%, rgb(170, 245, 201) 50%);
       }
       .title {
         max-width: 400px;
         margin: 0 auto;
+      }
+      .instructions{
+        max-width: 400px;
+        margin: 0 auto;
+      }
+      .instructions p{
+        max-width: 400px;
+        margin: 0 auto;
+      }
+      #connect-btn{
+        padding: 10px 20px;
+        background-color: #333;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+
       }
     </style>
   </head>
@@ -36,8 +58,15 @@
         <p>Atenda mais e melhor com o WhatsApp Botinho.</p>
         
       </div>
-        <div id="qrcode-container">Carregando...</div>
+      <div id="qrcode-container">Carregando...</div>
+        <button id="connect-btn">Iniciar o Botinho</button>
+      </div>
     </div>
     <script src="./render.js"></script>
+    <script>
+      document.getElementById('connect-btn').addEventListener('click', () => {
+        window.botinho.startWhatsapp();
+      });
+    </script>
   </body>
 </html>
