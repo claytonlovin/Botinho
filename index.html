@@ -4,6 +4,23 @@
     <meta charset="UTF-8" />
     <title>Botinho ;)</title>
     <style>
+      /* HTML: <div class="loader"></div> */
+      .loader {
+        width: 50px;
+        padding: 8px;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: #25b09b;
+        --_m: 
+          conic-gradient(#0000 10%,#000),
+          linear-gradient(#000 0 0) content-box;
+        -webkit-mask: var(--_m);
+                mask: var(--_m);
+        -webkit-mask-composite: source-out;
+                mask-composite: subtract;
+        animation: l3 1s infinite linear;
+      }
+      @keyframes l3 {to{transform: rotate(1turn)}}
       body {
         font-family: Arial, sans-serif;
         text-align: center;
@@ -25,12 +42,17 @@
         align-items: center;
         justify-content: center;
         height: 100vh;
-        background: #2cde7c;
-        background: linear-gradient(90deg,rgba(44, 222, 192, 1) 0%, rgb(170, 245, 201) 50%);
+        background: #ffffff;
+        background: linear-gradient(134deg, rgba(255, 255, 255, 1) 0%, rgba(242, 240, 240, 1) 56%, rgba(204, 227, 205, 1) 99%);
       }
       .title {
+        margin-right: 100px;
         max-width: 400px;
         margin: 0 auto;
+        margin-bottom: 20px;
+      }
+      .title img{
+        width: 100px;
       }
       .instructions{
         max-width: 400px;
@@ -41,26 +63,42 @@
         margin: 0 auto;
       }
       #connect-btn{
-        padding: 10px 20px;
-        background-color: #333;
-        color: #fff;
-        border: none;
+
+        padding: 15px 25px;
+        background-color: #85d38b;
+        color: #2e2e2e;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        border: 1px solid #ccc;
         border-radius: 5px;
         cursor: pointer;
+        opacity: 1;
+        transition: 0.3s;
 
       }
+      #connect-btn:hover{
+        opacity: 0.4;
+      }
+      .action {
+        min-height: 60px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
     </style>
   </head>
   <body>
     <div class="container">
       <div class="title">
-        <h1>Botinho ;)</h1>
-        <p>Atenda mais e melhor com o WhatsApp Botinho.</p>
-        
+        <img src="assets/logo.png" alt="">
       </div>
-      <div id="qrcode-container">Carregando...</div>
-        <button id="connect-btn">Iniciar o Botinho</button>
-      </div>
+     <div class="action">
+        <div class="loader"></div>
+        <div class="qrcode"></div>
+        <button id="connect-btn" style="display: none;">Iniciar o Botinho</button>
+     </div>
+
     </div>
     <script src="./render.js"></script>
     <script>

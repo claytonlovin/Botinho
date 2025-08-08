@@ -6,3 +6,4 @@ contextBridge.exposeInMainWorld('botinho', {
   onConnected: (callback) => ipcRenderer.on('whatsapp-connected', callback),
   onDisconnected: (callback) => ipcRenderer.on('whatsapp-disconnected', callback)
 });
+

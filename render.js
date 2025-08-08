@@ -1,19 +1,25 @@
 window.addEventListener('DOMContentLoaded', () => {
-  const container = document.getElementById('qrcode-container');
+  const container = document.querySelector('.loader');
+  const qrcode = document.querySelector('.qrcode')
+  const connectBtn = document.getElementById('connect-btn')
 
   window.botinho.onQrCode((dataUrl) => {
-    container.innerHTML = '';
+    qrcode.innerHTML = '';
     const img = document.createElement('img');
     img.src = dataUrl;
     img.alt = 'QR Code';
     img.style.width = '200px';
     img.style.height = '200px';
-    container.appendChild(img);
+    container.classList.remove('loader');
+    qrcode.appendChild(img);
+
   });
 
   window.botinho.onConnected(() => {
-    container.innerHTML = '<h2>WhatsApp já está conectado!</h2>';
+    container.classList.remove('loader');
+    qrcode.innerHTML = '';
+    connectBtn.style.display = 'block'
   });
-  // Inicia o WhatsApp
-  window.botinho.startWhatsapp();
+
+  window.botinho.startWhatsapp(); 
 });
