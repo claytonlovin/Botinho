@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>WhatsApp Conectado</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    nav {
+      background: #2cdec0;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 15px;
+      font-weight: bold;
+    }
+    nav a:hover {
+      opacity: 0.8;
+    }
+    main {
+      padding: 80px 20px 20px; /* espaço pro navbar fixo */
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">Botinho</div>
+    <div class="menu">
+      <a href="#" onclick="showSection('home')">Home</a>
+      <a href="#" onclick="showSection('fluxo')">Fluxo de Atendimento</a>
+    </div>
+  </nav>
+
+  <main>
+    <section id="home">
+      <h1>Home</h1>
+      <div id="status">Aguardando status...</div>
+    </section>
+
+    <section id="fluxo" style="display:none;">
+      <h1>Fluxo de Atendimento</h1>
+      <p>Configurações e monitoramento do atendimento.</p>
+    </section>
+  </main>
+
+  <script>
+    function showSection(id) {
+      document.querySelectorAll('main section').forEach(sec => sec.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
+    }
+
+    window.botinho?.onConnected(() => {
+      document.getElementById('status').textContent = 'WhatsApp conectado com sucesso!';
+    });
+  </script>
+</body>
+</html>
