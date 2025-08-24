@@ -4,6 +4,7 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const { gerenciadorSessoes } = require('./src/gerenciadorFluxo.js');
 const { GeminiWhatsAppHandler } = require('./src/GeminiWhatsAppHandler.js');
 const qrcode = require('qrcode');
+const fluxoRepository = require('./database/fluxoRepository');
 
 let win;
 let isConnected = false;
@@ -51,6 +52,23 @@ client.on('disconnected', () => {
   if (win) win.webContents.send('whatsapp-disconnected');
 });
 
+
+client.on('message', async (message) => {
+    const numero = message.from;
+    const entrada = message.body;
+
+    const resposta = await gerenciadorSessoes.processarEntrada(numero, entrada, client, geminiHandler);
+
+    if (resposta) {
+        await client.sendMessage(numero, resposta);
+    }
+    
+    if (entrada.toLowerCase() === 'sair') {
+        gerenciadorSessoes.removerSessao(numero);
+        await client.sendMessage(numero, 'Sessão encerrada. Até logo!');
+    }
+});
+
 // Inicializa o client logo que o app estiver pronto
 app.whenReady().then(() => {
   createWindow();
@@ -67,14 +85,17 @@ function createWindow() {
       contextIsolation: true,
       nodeIntegration: false
     }
+
+    
   });
 
   win.loadFile('views/index.html');
+  
 }
 
 // Eventualmente o renderer pode pedir status ou iniciar novamente, mas não deve inicializar o client
 ipcMain.on('start-whatsapp', async (message) => {
-  if (isConnected) {
+  if(isConnected){
     console.log('ℹ️ Já conectado, carregando tela conectada...');
     win.loadFile('views/connected.html');
 
@@ -88,6 +109,8 @@ ipcMain.on('start-whatsapp', async (message) => {
     const entrada = message.body;
 
     const resposta = await gerenciadorSessoes.processarEntrada(numero, entrada, client, geminiHandler);
+    console.log('DEBUG - resposta:', resposta);
+
 
     if (resposta) {
         await client.sendMessage(numero, resposta);
@@ -104,19 +127,25 @@ ipcMain.on('start-whatsapp', async (message) => {
   }
 });
 
-client.on('message', async (message) => {
-  const numero = message.from;
-  const entrada = message.body;
 
-  const resposta = await gerenciadorSessoes.processarEntrada(numero, entrada, client, geminiHandler);
-
-  if (resposta) {
-      await client.sendMessage(numero, resposta);
-  }
-  
-  if (entrada.toLowerCase() === 'sair') {
-      gerenciadorSessoes.removerSessao(numero);
-      await client.sendMessage(numero, 'Sessão encerrada. Até logo!');
-  }
+ipcMain.handle('get-fluxo', async () => {
+  return new Promise((resolve, reject) => {
+    fluxoRepository.getFluxo((err, fluxo) => {
+      if (err) {
+        console.error('Erro ao obter fluxo:', err);
+        reject(err);
+      } else {
+        resolve(fluxo);
+      }
+    });
+  });
 });
 
+ipcMain.handle('save-fluxo', async (event, fluxoObj) => {
+  return new Promise((resolve, reject) => {
+    fluxoRepository.saveFluxo(fluxoObj, (err) => {
+      if (err) reject(err);
+      else resolve({ success: true });
+    });
+  });
+});

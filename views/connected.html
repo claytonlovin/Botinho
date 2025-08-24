@@ -3,14 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <title>WhatsApp Conectado</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+       font-family: "Saira", sans-serif;
     }
     nav {
-      background: #2cdec0;
-      padding: 10px 20px;
+      background: #2e4b2d;
+      padding: 20px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -24,20 +30,36 @@
       color: #fff;
       text-decoration: none;
       margin-left: 15px;
-      font-weight: bold;
+      
     }
     nav a:hover {
       opacity: 0.8;
     }
     main {
-      padding: 80px 20px 20px; /* espaço pro navbar fixo */
+      padding: 80px 20px 20px;
       text-align: center;
+    }
+    #debug-info {
+      background: #f0f0f0;
+      padding: 10px;
+      margin: 20px 0;
+      border-left: 4px solid #85d38b;
+      text-align: left;
+    }
+    #flow-visualization {
+      margin: 20px 0;
+      text-align: left;
     }
   </style>
 </head>
 <body>
   <nav>
-    <div class="logo">Botinho</div>
+    <div class="logo">
+      <a href="#" onclick="showSection('home')">
+        <img src="../assets/logo_nav.png" alt="Logo" style="height:40px; vertical-align: middle;">
+      </a>
+
+    </div>
     <div class="menu">
       <a href="#" onclick="showSection('home')">Home</a>
       <a href="#" onclick="showSection('fluxo')">Fluxo de Atendimento</a>
@@ -53,7 +75,17 @@
     <section id="fluxo" style="display:none;">
       <h1>Fluxo de Atendimento</h1>
       <p>Configurações e monitoramento do atendimento.</p>
+      
+      <!-- Área de Debug -->
+      <div id="debug-info">
+        
+        <div id="debug-content"></div>
+      </div>
+      
+      <textarea id="fluxo-textarea" style="width:100%;height:300px"></textarea>
+      <button id="salvar">Salvar</button>
     </section>
+
   </main>
 
   <script>
@@ -66,5 +98,116 @@
       document.getElementById('status').textContent = 'WhatsApp conectado com sucesso!';
     });
   </script>
+
+  <script>
+    // Função para debug
+    function updateDebugInfo(message) {
+      const debugElement = document.getElementById('debug-content');
+      const timestamp = new Date().toLocaleTimeString();
+    }
+
+    // Função para converter JSON para JSTree
+    function jsonToJsTreeData(obj) {
+      if (!obj || typeof obj !== 'object') {
+        return [];
+      }
+      
+      return Object.keys(obj).map(key => {
+        const value = obj[key];
+        if (typeof value === 'object' && value !== null) {
+          return {
+            text: key,
+            children: jsonToJsTreeData(value),
+            state: { opened: true }
+          };
+        } else {
+          return {
+            text: `${key}: ${value}`,
+            children: []
+          };
+        }
+      });
+    }
+
+    // Função principal de carregamento
+    async function carregar() {
+      
+      try {
+        // Verifica se window.botinho existe
+        if (!window.botinho) {
+          throw new Error('window.botinho não está disponível');
+        }
+        
+        
+        const fluxo = await window.botinho.getFluxo();
+        
+   
+        
+        if (fluxo) {
+          // Atualiza o textarea
+          document.getElementById('fluxo-textarea').value = JSON.stringify(fluxo, null, 2);
+         
+          
+          // Atualiza a visualização da árvore
+         
+          const treeData = jsonToJsTreeData(fluxo);
+     
+          
+          // Destroi a instância anterior se existir
+          $('#flow-visualization').jstree('destroy');
+          
+          // Cria nova instância do JSTree
+          $('#flow-visualization').jstree({
+            'core': {
+              'data': treeData
+            }
+          });
+          
+         
+        } else {
+          document.getElementById('fluxo-textarea').value = 'Nenhum fluxo encontrado no banco de dados';
+        }
+        
+      } catch (error) {
+        console.error('Erro ao carregar fluxo:', error);
+        document.getElementById('fluxo-textarea').value = `Erro ao carregar: ${error.message}`;
+      }
+    }
+
+    // Event listener para o botão salvar
+    document.getElementById('salvar').addEventListener('click', async () => {
+      
+      try {
+        const novoFluxo = JSON.parse(document.getElementById('fluxo-textarea').value);
+        await window.botinho.saveFluxo(novoFluxo);
+        alert('Fluxo salvo!');
+        
+        // Recarrega a visualização após salvar
+        await carregar();
+        
+      } catch (e) {
+        alert('Erro: ' + e.message);
+      }
+    });
+
+    // Carrega quando o DOM estiver pronto
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      // Aguarda um pouco para garantir que o preload foi carregado
+      setTimeout(() => {
+        carregar();
+      }, 1000);
+    });
+
+    // Teste adicional para verificar se window.botinho existe
+    window.addEventListener('load', () => {
+      updateDebugInfo(`window.botinho disponível: ${window.botinho ? 'SIM' : 'NÃO'}`);
+      if (window.botinho) {
+        updateDebugInfo(`Métodos disponíveis: ${Object.keys(window.botinho).join(', ')}`);
+      }
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/gh/alyssaxuu/flowy/flowy.min.js"></script>
+
 </body>
 </html>

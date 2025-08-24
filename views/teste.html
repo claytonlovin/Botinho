@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Flow Builder - Escolhas e Filhos</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/drawflow/dist/drawflow.min.css">
+  <style>
+    :root {
+  --dfBackgroundColor: #ffffff;
+  --dfBackgroundSize: 0px;
+  --dfBackgroundImage: linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px);
+
+  --dfNodeType: block;
+  --dfNodeTypeFloat: right;
+  --dfNodeBackgroundColor: #ffffff;
+  --dfNodeTextColor: #000000;
+  --dfNodeBorderSize: 1px;
+  --dfNodeBorderColor: rgba(146, 146, 146, 1);
+  --dfNodeBorderRadius: 0px;
+  --dfNodeMinHeight: 35px;
+  --dfNodeMinWidth: 154px;
+  --dfNodePaddingTop: 13px;
+  --dfNodePaddingBottom: 9px;
+  --dfNodeBoxShadowHL: 0px;
+  --dfNodeBoxShadowVL: 0px;
+  --dfNodeBoxShadowBR: 0px;
+  --dfNodeBoxShadowS: 0px;
+  --dfNodeBoxShadowColor: null;
+
+  --dfNodeHoverBackgroundColor: #ffffff;
+  --dfNodeHoverTextColor: #000000;
+  --dfNodeHoverBorderSize: 1px;
+  --dfNodeHoverBorderColor: null;
+  --dfNodeHoverBorderRadius: 0px;
+
+  --dfNodeHoverBoxShadowHL: 0px;
+  --dfNodeHoverBoxShadowVL: 0px;
+  --dfNodeHoverBoxShadowBR: 0px;
+  --dfNodeHoverBoxShadowS: 0px;
+  --dfNodeHoverBoxShadowColor: null;
+
+  --dfNodeSelectedBackgroundColor: rgba(255, 255, 255, 1);
+  --dfNodeSelectedTextColor: rgba(35, 35, 35, 1);
+  --dfNodeSelectedBorderSize: 2px;
+  --dfNodeSelectedBorderColor: rgba(92, 92, 92, 1);
+  --dfNodeSelectedBorderRadius: 0px;
+
+  --dfNodeSelectedBoxShadowHL: 0px;
+  --dfNodeSelectedBoxShadowVL: 0px;
+  --dfNodeSelectedBoxShadowBR: 0px;
+  --dfNodeSelectedBoxShadowS: 0px;
+  --dfNodeSelectedBoxShadowColor: #4ea9ff;
+
+  --dfInputBackgroundColor: #ffffff;
+  --dfInputBorderSize: 0px;
+  --dfInputBorderColor: rgba(112, 112, 112, 1);
+  --dfInputBorderRadius: 40px;
+  --dfInputLeft: -27px;
+  --dfInputHeight: 20px;
+  --dfInputWidth: 20px;
+
+  --dfInputHoverBackgroundColor: #ffffff;
+  --dfInputHoverBorderSize: 2px;
+  --dfInputHoverBorderColor: rgba(119, 119, 119, 1);
+  --dfInputHoverBorderRadius: 40px;
+
+  --dfOutputBackgroundColor: #ffffff;
+  --dfOutputBorderSize: 2px;
+  --dfOutputBorderColor: rgba(82, 82, 82, 1);
+  --dfOutputBorderRadius: 50px;
+  --dfOutputRight: -3px;
+  --dfOutputHeight: 20px;
+  --dfOutputWidth: 20px;
+
+  --dfOutputHoverBackgroundColor: #ffffff;
+  --dfOutputHoverBorderSize: 2px;
+  --dfOutputHoverBorderColor: rgba(82, 82, 82, 1);
+  --dfOutputHoverBorderRadius: 50px;
+
+  --dfLineWidth: 3px;
+  --dfLineColor: rgba(46, 75, 45, 1);
+  --dfLineHoverColor: rgba(58, 115, 56, 1);
+  --dfLineSelectedColor: rgba(46, 75, 45, 1);
+
+  --dfRerouteBorderWidth: 2px;
+  --dfRerouteBorderColor: #000000;
+  --dfRerouteBackgroundColor: #ffffff;
+
+  --dfRerouteHoverBorderWidth: 2px;
+  --dfRerouteHoverBorderColor: #000000;
+  --dfRerouteHoverBackgroundColor: #ffffff;
+
+  --dfDeleteDisplay: block;
+  --dfDeleteColor: #ffffff;
+  --dfDeleteBackgroundColor: #000000;
+  --dfDeleteBorderSize: 2px;
+  --dfDeleteBorderColor: #ffffff;
+  --dfDeleteBorderRadius: 50px;
+  --dfDeleteTop: -15px;
+
+  --dfDeleteHoverColor: #000000;
+  --dfDeleteHoverBackgroundColor: #ffffff;
+  --dfDeleteHoverBorderSize: 2px;
+  --dfDeleteHoverBorderColor: #000000;
+  --dfDeleteHoverBorderRadius: 50px;
+
+}
+
+#drawflow {
+  background: var(--dfBackgroundColor);
+  background-size: var(--dfBackgroundSize) var(--dfBackgroundSize);
+  background-image: var(--dfBackgroundImage);
+}
+
+.drawflow .drawflow-node {
+  display: var(--dfNodeType);
+  background: var(--dfNodeBackgroundColor);
+  color: var(--dfNodeTextColor);
+  border: var(--dfNodeBorderSize)  solid var(--dfNodeBorderColor);
+  border-radius: var(--dfNodeBorderRadius);
+  min-height: var(--dfNodeMinHeight);
+  width: auto;
+  min-width: var(--dfNodeMinWidth);
+  padding-top: var(--dfNodePaddingTop);
+  padding-bottom: var(--dfNodePaddingBottom);
+  -webkit-box-shadow: var(--dfNodeBoxShadowHL) var(--dfNodeBoxShadowVL) var(--dfNodeBoxShadowBR) var(--dfNodeBoxShadowS) var(--dfNodeBoxShadowColor);
+  box-shadow:  var(--dfNodeBoxShadowHL) var(--dfNodeBoxShadowVL) var(--dfNodeBoxShadowBR) var(--dfNodeBoxShadowS) var(--dfNodeBoxShadowColor);
+}
+
+.drawflow .drawflow-node:hover {
+  background: var(--dfNodeHoverBackgroundColor);
+  color: var(--dfNodeHoverTextColor);
+  border: var(--dfNodeHoverBorderSize)  solid var(--dfNodeHoverBorderColor);
+  border-radius: var(--dfNodeHoverBorderRadius);
+  -webkit-box-shadow: var(--dfNodeHoverBoxShadowHL) var(--dfNodeHoverBoxShadowVL) var(--dfNodeHoverBoxShadowBR) var(--dfNodeHoverBoxShadowS) var(--dfNodeHoverBoxShadowColor);
+  box-shadow:  var(--dfNodeHoverBoxShadowHL) var(--dfNodeHoverBoxShadowVL) var(--dfNodeHoverBoxShadowBR) var(--dfNodeHoverBoxShadowS) var(--dfNodeHoverBoxShadowColor);
+}
+
+.drawflow .drawflow-node.selected {
+  background: var(--dfNodeSelectedBackgroundColor);
+  color: var(--dfNodeSelectedTextColor);
+  border: var(--dfNodeSelectedBorderSize)  solid var(--dfNodeSelectedBorderColor);
+  border-radius: var(--dfNodeSelectedBorderRadius);
+  -webkit-box-shadow: var(--dfNodeSelectedBoxShadowHL) var(--dfNodeSelectedBoxShadowVL) var(--dfNodeSelectedBoxShadowBR) var(--dfNodeSelectedBoxShadowS) var(--dfNodeSelectedBoxShadowColor);
+  box-shadow:  var(--dfNodeSelectedBoxShadowHL) var(--dfNodeSelectedBoxShadowVL) var(--dfNodeSelectedBoxShadowBR) var(--dfNodeSelectedBoxShadowS) var(--dfNodeSelectedBoxShadowColor);
+}
+
+.drawflow .drawflow-node .input {
+  left: var(--dfInputLeft);
+  background: var(--dfInputBackgroundColor);
+  border: var(--dfInputBorderSize)  solid var(--dfInputBorderColor);
+  border-radius: var(--dfInputBorderRadius);
+  height: var(--dfInputHeight);
+  width: var(--dfInputWidth);
+}
+
+.drawflow .drawflow-node .input:hover {
+  background: var(--dfInputHoverBackgroundColor);
+  border: var(--dfInputHoverBorderSize)  solid var(--dfInputHoverBorderColor);
+  border-radius: var(--dfInputHoverBorderRadius);
+}
+
+.drawflow .drawflow-node .outputs {
+  float: var(--dfNodeTypeFloat);
+}
+
+.drawflow .drawflow-node .output {
+  right: var(--dfOutputRight);
+  background: var(--dfOutputBackgroundColor);
+  border: var(--dfOutputBorderSize)  solid var(--dfOutputBorderColor);
+  border-radius: var(--dfOutputBorderRadius);
+  height: var(--dfOutputHeight);
+  width: var(--dfOutputWidth);
+}
+
+.drawflow .drawflow-node .output:hover {
+  background: var(--dfOutputHoverBackgroundColor);
+  border: var(--dfOutputHoverBorderSize)  solid var(--dfOutputHoverBorderColor);
+  border-radius: var(--dfOutputHoverBorderRadius);
+}
+
+.drawflow .connection .main-path {
+  stroke-width: var(--dfLineWidth);
+  stroke: var(--dfLineColor);
+}
+
+.drawflow .connection .main-path:hover {
+  stroke: var(--dfLineHoverColor);
+}
+
+.drawflow .connection .main-path.selected {
+  stroke: var(--dfLineSelectedColor);
+}
+
+.drawflow .connection .point {
+  stroke: var(--dfRerouteBorderColor);
+  stroke-width: var(--dfRerouteBorderWidth);
+  fill: var(--dfRerouteBackgroundColor);
+}
+
+.drawflow .connection .point:hover {
+  stroke: var(--dfRerouteHoverBorderColor);
+  stroke-width: var(--dfRerouteHoverBorderWidth);
+  fill: var(--dfRerouteHoverBackgroundColor);
+}
+
+.drawflow-delete {
+  display: var(--dfDeleteDisplay);
+  color: var(--dfDeleteColor);
+  background: var(--dfDeleteBackgroundColor);
+  border: var(--dfDeleteBorderSize) solid var(--dfDeleteBorderColor);
+  border-radius: var(--dfDeleteBorderRadius);
+}
+
+.parent-node .drawflow-delete {
+  top: var(--dfDeleteTop);
+}
+
+.drawflow-delete:hover {
+  color: var(--dfDeleteHoverColor);
+  background: var(--dfDeleteHoverBackgroundColor);
+  border: var(--dfDeleteHoverBorderSize) solid var(--dfDeleteHoverBorderColor);
+  border-radius: var(--dfDeleteHoverBorderRadius);
+}
+
+
+    body { margin:0; font-family:Arial; overflow:hidden; }
+    #drawflow { width:100vw; height:100vh; background:#f9fafb !important; }
+
+    .menu {
+      position: absolute; top: 20px; left: 20px;
+      display: flex; flex-direction: column; gap: 8px;
+      z-index: 10;
+    }
+    .drag-node {
+      padding: 8px 12px;
+      background: #02724d; color:white;
+      border-radius: 6px;
+      cursor: grab; user-select: none;
+    }
+
+  /* Estilo do cabeçalho do nó "Escolha" */
+  .drawflow-node.escolha .drawflow_content_node b {
+    display: block;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 8px;
+    color: #026b25;
+  }
+  .drawflow-node.filho .drawflow_content_node b {
+    display: block;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 8px;
+    color: #0193a7;
+  }
+  /* Estilo para os inputs */
+  .drawflow-node input,
+  .drawflow-node textarea,
+  .drawflow-node select {
+    width: calc(100% - 10px);
+    padding: 6px;
+    margin-top: 5px;
+
+  }
+
+
+
+  
+  /* === Estilos para as entradas e saídas (as "bolinhas") === */
+  .drawflow-node .inputs .input_1,
+  .drawflow-node .outputs .output_1 {
+    /* Altera a cor de fundo das bolinhas */
+    background: #4b5563; /* Cor cinza escuro */
+  }
+
+  /* Estiliza as conexões (linhas entre os nós) */
+  .main-path {
+    stroke: #066832;
+    stroke-width: 2px;
+  }
+  </style>
+</head>
+<body>
+  <div class="menu">
+    <div class="drag-node" draggable="true" data-node="escolha">+ Escolha</div>
+    <div class="drag-node" draggable="true" data-node="filho">+ Filho</div>
+  </div>
+  <div id="drawflow"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/drawflow/dist/drawflow.min.js"></script>
+  <script>
+    const editor = new Drawflow(document.getElementById("drawflow"));
+    editor.start();
+
+    // templates para cada tipo de nó
+    const templates = {
+      escolha: `
+        <div class="step">
+          <b>Escolha</b><br>
+          <input name="titulo" placeholder="Título"><br>
+          <textarea name="mensagem" placeholder="Mensagem"></textarea><br>
+          <select name="type">
+            <option value="options">options</option>
+            <option value="input">input</option>
+            <option value="IA">IA</option>
+          </select>
+        </div>
+      `,
+      filho: `
+        <div>
+          <b>Filho</b><br>
+          <input name="escolha" placeholder="Escolha"><br>
+          <input name="titulo" placeholder="Título"><br>
+          <textarea name="mensagem" placeholder="Mensagem"></textarea><br>
+          <select name="type">
+            <option value="options">options</option>
+            <option value="input">input</option>
+            <option value="IA">IA</option>
+          </select>
+        </div>
+      `
+    };
+
+    // habilita arrastar do menu
+    document.querySelectorAll(".drag-node").forEach(node => {
+      node.addEventListener("dragstart", ev => {
+        ev.dataTransfer.setData("node", ev.target.dataset.node);
+      });
+    });
+
+    // drop no canvas
+    document.getElementById("drawflow").addEventListener("dragover", ev => ev.preventDefault());
+    document.getElementById("drawflow").addEventListener("drop", ev => {
+      ev.preventDefault();
+      const type = ev.dataTransfer.getData("node");
+      addNode(type, ev.clientX, ev.clientY);
+    });
+
+    function addNode(type, x, y) {
+        const data = {};
+        const nodeId = editor.addNode(
+            type, 1, 1,
+            x - editor.precanvas.getBoundingClientRect().x,
+            y - editor.precanvas.getBoundingClientRect().y,
+            type, data, templates[type]
+        );
+    }
+
+    // 🔄 conversão Drawflow -> JSON custom
+    function buildFlow() {
+      const exportData = editor.export();
+      const nodes = exportData.drawflow.Home.data;
+
+      function parseNode(id) {
+        const node = nodes[id];
+        if (!node) return null;
+
+        let obj = {};
+
+        // 🎯 Correção: Acessa o elemento do DOM real
+        const nodeElement = document.getElementById('node-' + id);
+        if (nodeElement) {
+            // coleta valores dos inputs
+            nodeElement.querySelectorAll("input, textarea, select").forEach(inp => {
+                obj[inp.name] = inp.value;
+            });
+        } else {
+            // fallback para garantir que o fluxo não quebre caso o elemento não seja encontrado
+            console.error("Node element not found for id:", id);
+            return null;
+        }
+
+        // se for escolha -> pode ter filhos conectados
+        if (node.name === "escolha") {
+          obj.type = obj.type || "options";
+          obj.filhos = [];
+
+          const outputs = node.outputs["output_1"].connections;
+          outputs.forEach(conn => {
+            const child = parseNode(conn.node);
+            if (child) obj.filhos.push(child);
+          });
+        }
+
+        // se for filho -> pode ter filhos também
+        if (node.name === "filho") {
+          obj.filhos = [];
+
+          const outputs = node.outputs["output_1"].connections;
+          outputs.forEach(conn => {
+            const child = parseNode(conn.node);
+            if (child) obj.filhos.push(child);
+          });
+        }
+
+        return obj;
+      }
+
+      // assume que o fluxo começa pelo primeiro nó criado
+      const rootId = Object.keys(nodes)[0];
+      return parseNode(rootId);
+    }
+
+    // tecla "E" exporta para JSON
+    document.addEventListener("keydown", e => {
+      if (e.key === "e") {
+        console.log("Fluxo JSON:", JSON.stringify(buildFlow(), null, 2));
+        alert("Fluxo exportado! Veja no console.");
+      }
+    });
+  </script>
+</body>
+</html>
